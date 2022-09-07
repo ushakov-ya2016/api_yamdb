@@ -5,8 +5,8 @@ class Category(models.Model):
     """
     Категории (типы) произведений.
     """
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=200)
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(unique=True, max_length=50)
 
     class Meta:
         verbose_name = 'Категория'
@@ -21,8 +21,8 @@ class Genre(models.Model):
     """
     Категории жанров.
     """
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=200)
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(unique=True, max_length=50)
 
     class Meta:
         verbose_name = 'Жанр'
@@ -37,9 +37,9 @@ class Title(models.Model):
     """
     Произведения, к которым пишут отзывы.
     """
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=256)
     year = models.IntegerField()
-    description = models.TextField()
+    description = models.TextField(blank=True)
     category = models.ForeignKey(Category,
                                  blank=True,
                                  null=True,
