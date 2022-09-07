@@ -41,7 +41,6 @@ class Title(models.Model):
     year = models.IntegerField()
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category,
-                                 blank=True,
                                  null=True,
                                  on_delete=models.SET_NULL,
                                  related_name='categories')
@@ -61,7 +60,9 @@ class GenreTitle(models.Model):
     Модель для связи жанров и произведений.
     """
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    genre = models.ForeignKey(Genre,
+                              null=True,
+                              on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = 'Произведение, жанр'
