@@ -1,7 +1,7 @@
 from django.db import models
 
-from .validators import validate_year
-from users.models import User
+from .validators import validate_score, validate_year
+#from users.models import User
 
 
 class Category(models.Model):
@@ -78,10 +78,13 @@ class Review(models.Model):
     """
     Модель для создания отзывов.
     """
-    title = models.ForeignKey(Title, on_delete=models.CASCADE)
+    title = models.ForeignKey(
+        Title, on_delete=models.CASCADE,
+        related_name='reviews'
+    )
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.IntegerField()
+    #author = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.IntegerField(validators=[validate_score])
     pub_date = models.DateTimeField(auto_now_add=True)
 
 
@@ -89,7 +92,10 @@ class Comments(models.Model):
     """
     Модель для создания комментариев к отызвам.
     """
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE,
+        related_name='comments'
+    )
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    #author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
