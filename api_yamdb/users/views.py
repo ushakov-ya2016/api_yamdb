@@ -4,10 +4,12 @@ from django.core.mail import send_mail
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import filters, status, views, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.tokens import default_token_generator
 
-from .serializers import  UserSerializer, EmailSerializer, ConfirmationCodeSerializer 
+
+from .serializers import  UserSerializer, ConfirmationCodeSerializer, SignupSerializer 
 from .models import User
 from .permission import IsAdmin
 
@@ -38,28 +40,25 @@ class UserViewSet(viewsets.ModelViewSet):
                 data=serializer.data, status=status.HTTP_200_OK
             )
 
-class EmailRegistrationView(views.APIView):
-    permission_classes = [AllowAny]
 
-    @staticmethod
-    def mail_send(email, user):
-        send_mail(
-            subject=' Confirmation Code',
-            message=f'Your confirmation: '
-                    f'{user.confirmation_code}',
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=False
-        )
-
-    def post(self, request):
-        serializer = EmailSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data['email']
-        serializer.save(email=email)
-        user = get_object_or_404(User, email=email)
-        self.mail_send(email, user)
-        return Response({f'email: {email}'}, status=status.HTTP_200_OK)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def signup(request):
+    serializer = SignupSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user, created = User.objects.get_or_create(
+        email=serializer.validated_data['email'],
+        username=serializer.validated_data['username'],
+    )
+    confirmation_code = default_token_generator.make_token(user)
+    send_mail(
+        'Your registration token',
+        f'Код подтверждения: {confirmation_code}',
+        f'{settings.DEFAULT_FROM_EMAIL}',
+        [email],
+        fail_silently=False,  
+    )
+    return Response(serializer.data, status=status.HTTP_200_OK) 
 
 
 class AccessTokenView(views.APIView):
