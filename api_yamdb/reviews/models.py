@@ -1,5 +1,6 @@
 from django.db import models
 
+from .validators import validate_year
 from users.models import User
 
 
@@ -40,7 +41,7 @@ class Title(models.Model):
     Произведения, к которым пишут отзывы.
     """
     name = models.CharField(max_length=256)
-    year = models.IntegerField()
+    year = models.IntegerField(validators=[validate_year])
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category,
                                  null=True,
