@@ -119,7 +119,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=2),
     'JWT_ALLOW_REFRESH': True,
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7)
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    'AUTH_HEADER_TYPES': ('Bearer',)
 }
 
 DEFAULT_FROM_EMAIL = 'admin@yambd.com'
