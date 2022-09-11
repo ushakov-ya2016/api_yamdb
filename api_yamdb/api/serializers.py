@@ -1,26 +1,50 @@
 from rest_framework import serializers
+from reviews.models import Category, Comments, Genre, Review, Title
 
-from reviews.models import Category, Genre, Title, Review, Comments
 
-
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        fields = '__all__'
+        fields = ('name', 'slug',)
+        lookup_field = 'slug'
+        # extra_kwargs = {
+        #     'url': {'lookup_field': 'slug'}
+        # }
         model = Category
 
 
-class GenreSerializer(serializers.ModelSerializer):
+class GenreSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        fields = '__all__'
+        fields = ('name', 'slug',)
+        lookup_field = 'slug'
+        # extra_kwargs = {
+        #     'url': {'lookup_field': 'slug'}
+        # }
         model = Genre
 
 
-class TitleSerializer(serializers.ModelSerializer):
+class TitleWriteSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(slug_field='slug',
+                                         many=True,
+                                         queryset=Genre.objects.all())
+    category = serializers.SlugRelatedField(slug_field='slug',
+                                            queryset=Category.objects.all())
 
     class Meta:
         fields = '__all__'
+        model = Title
+
+
+class TitleReadSerializer(serializers.ModelSerializer):
+    genre = serializers.GenreSerializer(many=True)
+    # rating =
+    category = serializers.CategorySerializer()
+
+    class Meta:
+        fields = (
+            'id', 'name', 'year', 'description', 'genre', 'category'
+        )
         model = Title
 
 
