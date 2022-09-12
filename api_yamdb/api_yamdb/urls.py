@@ -25,5 +25,5 @@ urlpatterns = [
         name='redoc'
     ),
     path('api/', include('api.urls')),
-    # path('api/', include('users.urls')), ## разкомментить после добавления приложения users
+    path('api/', include('users.urls')),
 ]

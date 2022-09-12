@@ -36,7 +36,7 @@ python3 manage.py makemigrations
 ```
 python3 manage.py migrate
 ```
-7. Импортировать тестовые данные:
+7. импортировать тестовые данные:
 ```
 python3 manage.py import_csv
 ```

@@ -55,7 +55,7 @@ def signup(request):
         'Your registration token',
         f'Код подтверждения: {confirmation_code}',
         f'{settings.DEFAULT_FROM_EMAIL}',
-        [email],
+        [serializer.validated_data['email'], ],
         fail_silently=False,  
     )
     return Response(serializer.data, status=status.HTTP_200_OK) 

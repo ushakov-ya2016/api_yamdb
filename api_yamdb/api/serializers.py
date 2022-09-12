@@ -37,9 +37,9 @@ class TitleWriteSerializer(serializers.ModelSerializer):
 
 
 class TitleReadSerializer(serializers.ModelSerializer):
-    genre = serializers.GenreSerializer(many=True)
+    genre = GenreSerializer(many=True)
     # rating =
-    category = serializers.CategorySerializer()
+    category = CategorySerializer()
 
     class Meta:
         fields = (

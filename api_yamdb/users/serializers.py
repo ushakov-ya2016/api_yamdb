@@ -17,7 +17,7 @@ class ConfirmationCodeSerializer(serializers.Serializer):
 class SignupSerializer(serializers.Serializer):
     email = serializers.EmailField(
         max_length=254,
-        required=True
+        required=True,
     )
     username = serializers.RegexField(
         max_length=150,
@@ -30,4 +30,11 @@ class SignupSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'Имя пользователя не может быть "me"'
             )
+        return value
+
+        def validate_email(self, value):
+            if value in User.objects.all():
+                raise serializers.ValidationError(
+                    'Данный e-mail уже зарегистрирован'
+                )
         return value
