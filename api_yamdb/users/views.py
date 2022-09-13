@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import filters, status, views, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import default_token_generator
 
 
