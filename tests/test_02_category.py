@@ -76,7 +76,7 @@ class Test02CategoryAPI:
             'Тип параметра `results` должен быть список'
         )
         assert len(data['results']) == 2, (
-            'Проверьте, что при GET запросе `/api/v1/categories/` возвращаете данные с пагинацией. '
+           'Проверьте, что при GET запросе `/api/v1/categories/` возвращаете данные с пагинацией. '
             'Значение параметра `results` не правильное'
         )
         assert {'name': 'Книги', 'slug': 'books'} in data['results'], (
