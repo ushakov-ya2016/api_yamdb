@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """
-    Разрешает все действия Админам, остальным тлько чтение.
+    Разрешает все действия Админам, остальным только чтение.
     """
 
     def has_permission(self, request, view):

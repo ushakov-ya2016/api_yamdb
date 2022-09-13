@@ -2,25 +2,19 @@ from rest_framework import serializers
 from reviews.models import Category, Comments, Genre, Review, Title
 
 
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ('name', 'slug',)
         lookup_field = 'slug'
-        # extra_kwargs = {
-        #     'url': {'lookup_field': 'slug'}
-        # }
         model = Category
 
 
-class GenreSerializer(serializers.HyperlinkedModelSerializer):
+class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ('name', 'slug',)
         lookup_field = 'slug'
-        # extra_kwargs = {
-        #     'url': {'lookup_field': 'slug'}
-        # }
         model = Genre
 
 
@@ -38,14 +32,17 @@ class TitleWriteSerializer(serializers.ModelSerializer):
 
 class TitleReadSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True)
-    # rating =
+    rating = serializers.SerializerMethodField()
     category = CategorySerializer()
 
     class Meta:
         fields = (
-            'id', 'name', 'year', 'description', 'genre', 'category'
+            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
         )
         model = Title
+
+    def get_rating(self, obj):
+        return None # сюда надо дописать получение рейтинга
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -62,3 +59,5 @@ class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Comments
+
+## тест

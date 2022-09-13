@@ -83,7 +83,7 @@ class Review(models.Model):
         related_name='reviews'
     )
     text = models.TextField()
-    # author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField(validators=[validate_score])
     pub_date = models.DateTimeField(auto_now_add=True)
 
@@ -97,5 +97,5 @@ class Comments(models.Model):
         related_name='comments'
     )
     text = models.TextField()
-    # author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)

@@ -12,11 +12,11 @@ from reviews.models import Category, Genre, Review, Title
 
 class CategoryViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
                       mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    permission_classes = [IsAdminOrReadOnly, ]
     queryset = Category.objects.all()
+    permission_classes = [IsAdminOrReadOnly, ]
     serializer_class = CategorySerializer
     lookup_field = 'slug'
-    filter_backends = (filters.SearchFilter)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
@@ -26,16 +26,32 @@ class GenreViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     lookup_field = 'slug'
-    filter_backends = (filters.SearchFilter)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly, ]
-    queryset = Title.objects.all()
     serializer_class = TitleReadSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('category', 'genre', 'name', 'year')
+    filterset_fields = ('year', )
+
+    def get_queryset(self):
+        queryset = Title.objects.all()
+
+        category = self.request.query_params.get('category')
+        if category is not None:
+            queryset = queryset.filter(category__slug=category)
+
+        genre = self.request.query_params.get('genre')
+        if genre is not None:
+            queryset = queryset.filter(genre__slug=genre)
+
+        name = self.request.query_params.get('name')
+        if name is not None:
+            queryset = queryset.filter(name__contains=name)
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):

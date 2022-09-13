@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -9,7 +8,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.tokens import default_token_generator
 
 
-from .serializers import  UserSerializer, ConfirmationCodeSerializer, SignupSerializer 
+from .serializers import UserSerializer, ConfirmationCodeSerializer, SignupSerializer
 from .models import User
 from .permission import IsAdmin
 
@@ -56,9 +55,9 @@ def signup(request):
         f'Код подтверждения: {confirmation_code}',
         f'{settings.DEFAULT_FROM_EMAIL}',
         [serializer.validated_data['email'], ],
-        fail_silently=False,  
+        fail_silently=False,
     )
-    return Response(serializer.data, status=status.HTTP_200_OK) 
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AccessTokenView(views.APIView):
