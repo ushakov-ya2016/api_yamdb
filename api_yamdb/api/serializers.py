@@ -32,7 +32,7 @@ class TitleWriteSerializer(serializers.ModelSerializer):
 
 class TitleReadSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True)
-    rating = serializers.SerializerMethodField()
+    rating = serializers.IntegerField()
     category = CategorySerializer()
 
     class Meta:
@@ -41,23 +41,21 @@ class TitleReadSerializer(serializers.ModelSerializer):
         )
         model = Title
 
-    def get_rating(self, obj):
-        return None # сюда надо дописать получение рейтинга
-
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.SlugRelatedField(slug_field='username',
+                                          read_only=True)
 
     class Meta:
         fields = '__all__'
+        read_only_fields = ('title', )
         model = Review
 
 
 class CommentsSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.SlugRelatedField(slug_field='username',
+                                          read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'pub_date', )
         model = Comments
-
-## тест

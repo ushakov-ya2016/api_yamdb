@@ -1,16 +1,19 @@
 from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, views, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 
-from .serializers import UserSerializer, ConfirmationCodeSerializer, SignupSerializer
+
 from .models import User
 from .permission import IsAdmin
+from .serializers import ConfirmationCodeSerializer, SignupSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -66,22 +69,19 @@ class AccessTokenView(views.APIView):
     def post(self, request):
         serializer = ConfirmationCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        confirmation_code = serializer.validated_data['confirmation_code']
-        email = serializer.validated_data['email']
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response({
-                'email':
-                    'Not found'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if user.confirmation_code != confirmation_code:
-            return Response({
-                'confirmation_code':
-                    f'Invalid confirmation code for email {user.email}'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+
+        user = get_object_or_404(User,
+                                 username=serializer.validated_data['username'])
+
+        # confirmation_code = serializer.validated_data['confirmation_code']
+        # email = serializer.validated_data['email']
+
+        # if user.confirmation_code != confirmation_code:
+        #     return Response({
+        #         'confirmation_code':
+        #             f'Invalid confirmation code for email {user.email}'},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
         return Response(self.get_token(user), status=status.HTTP_200_OK)
 
     @staticmethod

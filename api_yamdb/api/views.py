@@ -1,12 +1,16 @@
-from api.serializers import (CategorySerializer, CommentsSerializer,
-                             GenreSerializer, ReviewSerializer,
-                             TitleReadSerializer, TitleWriteSerializer)
+from api.permissions import IsAdmin, IsAdminModeratorAuthorOrReadOnly, IsAdminOrReadOnly
+from api.serializers import (
+    CategorySerializer,
+    CommentsSerializer,
+    GenreSerializer,
+    ReviewSerializer,
+    TitleReadSerializer,
+    TitleWriteSerializer,
+)
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, mixins, viewsets
-from api.permissions import (IsAdmin,
-                             IsAdminModeratorAuthorOrReadOnly,
-                             IsAdminOrReadOnly)
+from rest_framework import filters, mixins, permissions, viewsets
 from reviews.models import Category, Genre, Review, Title
 
 
@@ -37,7 +41,9 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_fields = ('year', )
 
     def get_queryset(self):
-        queryset = Title.objects.all()
+        queryset = (
+            Title.objects.annotate(rating=Avg('reviews__score')).order_by('id')
+        )
 
         category = self.request.query_params.get('category')
         if category is not None:
@@ -66,17 +72,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, pk=title_id)
-        return title.reviews
+        return title.reviews.all().order_by('id')
 
     def perform_create(self, serializer):
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, pk=title_id)
         serializer.save(author=self.request.user, title=title)
-
-    def get_permissions(self):
-        if self.action == 'destroy':
-            return (IsAdmin(),)
-        return super().get_permissions()
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
@@ -86,14 +87,10 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         review_id = self.kwargs.get('review_id')
         review = get_object_or_404(Review, pk=review_id)
-        return review.comments
+        return review.comments.all().order_by('id')
 
     def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
         review_id = self.kwargs.get('review_id')
-        review = get_object_or_404(Review, pk=review_id)
+        review = get_object_or_404(Review, pk=review_id, title=title_id)
         serializer.save(author=self.request.user, review=review)
-
-    def get_permissions(self):
-        if self.action == 'destroy':
-            return (IsAdmin(),)
-        return super().get_permissions()
