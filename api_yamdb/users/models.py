@@ -20,23 +20,31 @@ class User(AbstractUser):
         choices=USER_ROLES,
         default='user',
     )
+
+    username = models.CharField(
+        verbose_name='Имя пользователя',
+        max_length=150,
+        null=True,
+        unique=True
+    )
+
     email = models.EmailField(verbose_name='email', unique=True, blank=True)
     confirmation_code = models.CharField(max_length=100, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username, ']
 
     @property
     def is_admin(self):
-        return self.is_superuser or self.role == 'admin'
+        return self.role == 'admin'
 
     @property
     def is_moderator(self):
-        return self.role == self.moderator
+        return self.role == 'moderator'
 
     @property
     def is_user(self):
-        return self.role == self.user
+        return self.role == 'self.user'
 
     class Meta:
         verbose_name = 'user'
