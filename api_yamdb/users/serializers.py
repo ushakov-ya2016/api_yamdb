@@ -11,8 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ConfirmationCodeSerializer(serializers.Serializer):
-    # email = serializers.EmailField(required=True)
-    username = serializers.CharField()
+    username = serializers.RegexField(
+        max_length=150,
+        required=True,
+        regex=r'^[\w.@+-]'
+    )
     confirmation_code = serializers.CharField(required=True)
 
 
