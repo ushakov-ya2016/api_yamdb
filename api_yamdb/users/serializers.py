@@ -1,16 +1,18 @@
 from rest_framework import serializers
-
 from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('first_name', 'last_name', 'username', 'bio', 'email', 'role',)
+        fields = (
+            'first_name', 'last_name', 'username', 'bio', 'email', 'role',
+        )
         model = User
 
 
 class ConfirmationCodeSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
+    # email = serializers.EmailField(required=True)
+    username = serializers.CharField()
     confirmation_code = serializers.CharField(required=True)
 
 
@@ -32,9 +34,9 @@ class SignupSerializer(serializers.Serializer):
             )
         return value
 
-        def validate_email(self, value):
-            if value in User.objects.all():
-                raise serializers.ValidationError(
-                    'Данный e-mail уже зарегистрирован'
-                )
+    def validate_email(self, value):
+        if value in User.objects.all():
+            raise serializers.ValidationError(
+                'Данный e-mail уже зарегистрирован'
+            )
         return value
