@@ -83,4 +83,3 @@ class AccessTokenView(views.APIView):
         return {
             'token': str(AccessToken.for_user(user))
         }
-
