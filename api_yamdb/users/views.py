@@ -7,6 +7,9 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import get_object_or_404
+
 
 from .models import User
 from .permission import IsAdmin
@@ -25,16 +28,16 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated])
     def me(self, request):
         if request.method == 'GET':
-            serializer = self.get_serializer(request.user)
+            serializer = UserSerializer(request.user)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
-            serializer = self.get_serializer(
+            serializer = UserSerializer(
                 request.user,
                 data=request.data,
                 partial=True
             )
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(role=request.user.role)
             return Response(
                 data=serializer.data, status=status.HTTP_200_OK
             )
@@ -86,3 +89,4 @@ class AccessTokenView(views.APIView):
         return {
             'token': str(AccessToken.for_user(user))
         }
+
