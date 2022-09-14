@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from .validators import validate_score, validate_year
 from users.models import User
@@ -86,6 +87,14 @@ class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField(validators=[validate_score])
     pub_date = models.DateTimeField(auto_now_add=True)
+
+    def validate_unique(self, *args, **kwargs):
+        super().validate_unique(*args, **kwargs)
+        if self.__class__.objects.filter(title_id=self.title.pk, author_id=self.author.pk).exists():
+            raise ValidationError(
+                message='MyModel with this (fk, my_field) already exists.',
+                code='unique_together',
+            )
 
 
 class Comments(models.Model):
