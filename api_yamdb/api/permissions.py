@@ -33,15 +33,3 @@ class IsAdminModeratorAuthorOrReadOnly(permissions.BasePermission):
             or request.user.is_admin
             or request.user.is_superuser
         )
-
-
-class IsAdmin(permissions.BasePermission):
-    """
-    Разрешает все методы Администрорам и Суперпользователям.
-    """
-
-    def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and (request.user.is_superuser or request.user.is_admin)
-        )

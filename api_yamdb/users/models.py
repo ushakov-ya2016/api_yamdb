@@ -9,30 +9,25 @@ class User(AbstractUser):
         ('moderator', 'moderator'),
         ('admin', 'admin'),
     )
-
     bio = models.TextField(
         max_length=300,
         blank=True,
     )
-
     role = models.CharField(
         max_length=20,
         choices=USER_ROLES,
         default='user',
     )
-
     username = models.CharField(
         verbose_name='Имя пользователя',
         max_length=150,
-        null=True,
         unique=True
     )
-
-    email = models.EmailField(verbose_name='email', unique=True, blank=False)
+    email = models.EmailField(verbose_name='email', unique=True)
     confirmation_code = models.CharField(max_length=100, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username, ']
+    REQUIRED_FIELDS = ['username', ]
 
     @property
     def is_admin(self):
