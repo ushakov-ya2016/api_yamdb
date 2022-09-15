@@ -1,9 +1,6 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
 from reviews.models import Category, Comments, Genre, Review, Title
-
-from users.models import User
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -48,20 +45,23 @@ class TitleReadSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username',
-                                          read_only=True,
-                                 #         validators=[UniqueTogetherValidator(queryset=Review.objects.all(), fields=('title', 'author'))]
-                                          )
+                                          read_only=True,)
 
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         read_only_fields = ('title', 'author')
         model = Review
-#        validators = [
-#            UniqueTogetherValidator(
-#                queryset=Review.objects.all(),
-#                fields=('title', 'author')
-#            )
-#        ]
+
+    def validate(self, data):
+        if (self.context['request'].method == 'POST'
+            and Review.objects.filter(
+                title_id=self.context['request'].
+                parser_context['kwargs']['title_id'],
+                author=self.context['request'].user).exists()):
+            raise serializers.ValidationError(
+                'Нельзя оставить более чем один отзыв '
+                'к одному и тому же произведению!')
+        return data
 
 
 class CommentsSerializer(serializers.ModelSerializer):

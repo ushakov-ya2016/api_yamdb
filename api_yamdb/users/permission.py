@@ -7,4 +7,3 @@ class IsAdmin(permissions.BasePermission):
             request.user.is_authenticated
             and (request.user.is_superuser or request.user.is_admin)
         )
-
