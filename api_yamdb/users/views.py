@@ -8,11 +8,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from user.serializers import (UserSerializer,
+from users.serializers import (UserSerializer,
                               ConfirmationCodeSerializer,
                               SignupSerializer)
-from user.models import User
-from user.permission import IsAdmin
+from users.models import User
+from users.permission import IsAdmin
 
 
 class UserViewSet(viewsets.ModelViewSet):
