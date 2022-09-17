@@ -4,11 +4,12 @@ from django.db import models
 
 class User(AbstractUser):
 
-    USER_ROLES = (
-        ('user', 'user'),
-        ('moderator', 'moderator'),
-        ('admin', 'admin'),
-    )
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+
+    USER_ROLES = (USER, MODERATOR, ADMIN)
+
     bio = models.TextField(
         max_length=300,
         blank=True,
@@ -31,15 +32,15 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == 'admin'
+        return self.role == self.ADMIN
 
     @property
     def is_moderator(self):
-        return self.role == 'moderator'
+        return self.role == self.MODERATOR
 
     @property
     def is_user(self):
-        return self.role == 'self.user'
+        return self.role == self.USER
 
     class Meta:
         verbose_name = 'user'

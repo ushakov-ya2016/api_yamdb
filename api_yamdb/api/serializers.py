@@ -57,7 +57,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             and Review.objects.filter(
                 title_id=self.context['request'].
                 parser_context['kwargs']['title_id'],
-                author=self.context['request'].user).exists()):
+                author=self.context['request'].user)):
             raise serializers.ValidationError(
                 'Нельзя оставить более чем один отзыв '
                 'к одному и тому же произведению!')
