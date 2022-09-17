@@ -9,7 +9,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from users.serializers import (
-    UserSerializer, ConfirmationCodeSerializer, SignupSerializer
+    UserSerializer,
+    ConfirmationCodeSerializer,
+    SignupSerializer
 )
 from users.models import User
 from users.permission import IsAdmin
