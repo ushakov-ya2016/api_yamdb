@@ -34,9 +34,20 @@ class SignupSerializer(serializers.Serializer):
         validators=[UniqueValidator(queryset=User.objects.all()), ]
     )
 
-    def validate_username(self, value):
-        if value == 'me':
+    def validate(self, data):
+        if data.get('username') == 'me':
             raise serializers.ValidationError(
                 'Имя пользователя не может быть "me"'
             )
-        return value
+        elif User.objects.filter(username=data.get('username')):
+            if User.objects.get(
+                username=data.get('username')
+            ).email != data.get('email'):
+                raise serializers.ValidationError('Такой username уже занят')
+        elif User.objects.filter(email=data.get('email')):
+            if User.objects.get(
+                email=data.get('email')
+            ).username != data.get('username'):
+                raise serializers.ValidationError('Такой email уже занят')
+        return data
+
