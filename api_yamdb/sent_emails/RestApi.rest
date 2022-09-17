@@ -1,0 +1,221 @@
+### * ----------------------------------------------------------- User_1 (admin)
+  @email_1=bekshanskiy@gmail.com
+  @username_1=beksh123
+  @password_1=beksh123dsf
+  @confirmation_code_1=645-40985cd13ebdcaaae86e
+  @token_1=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYzMjU5MDQ4LCJpYXQiOjE2NjMwODYyNDgsImp0aSI6IjU4YjRmMjQ5M2U4NzRkNTI4YzM0ZmVkMzJlODk2Y2IyIiwidXNlcl9pZCI6MTA1fQ.tpC2p6ALXFPSQ356LRMqKgptKIrsgo_aymdgysL8c0s
+
+### * ------------------------------------------------------------ User_2 (user)
+  @email_2=123123@gmail.com
+  @username_2=asdfasdf223
+  @password_2=beksh123dsf
+  @confirmation_code_2=646-0709cc0c5aa774e7a8b2
+  @token_2=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYzMzMzMjM2LCJpYXQiOjE2NjMxNjA0MzYsImp0aSI6IjExOTI2NDViMDk2ODQ5NjI5NDIyMjA5MTY5ZjNmZGFmIiwidXNlcl9pZCI6MTA1fQ.31xQ6Z6d1UVRwu0AiE7JGTNQUQvN07u_RCOSTNoBjvQ
+
+### * --------------------------------------------------------------- JWT Tokens
+### * Получение confirmation code
+  POST http://127.0.0.1:8000/api/v1/auth/signup/
+  Content-Type: application/json
+
+  {
+    "email": "{{email_1}}",
+    "username": "{{username_1}}"
+  }
+
+### * Получить JWT-токен
+  POST http://127.0.0.1:8000/api/v1/auth/token/
+  Content-Type: application/json
+
+  {
+    "username": "{{username_1}}",
+    "confirmation_code": "{{confirmation_code_1}}"
+  }
+
+### * --------------------------------------------------------------- Categories
+### * Получение списка всех категорий
+  GET http://127.0.0.1:8000/api/v1/categories/
+  Content-Type: application/json
+
+### * Добавление новой категории
+  POST http://127.0.0.1:8000/api/v1/categories/
+  Content-Type: application/json
+  # Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+  {
+    "name":"Сериал",
+    "slug":"Serial"
+  }
+
+### * Удаление категории
+  DELETE http://127.0.0.1:8000/api/v1/categories/Serial/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+### * ------------------------------------------------------------------- Genres
+### * Получение списка всех жанров
+  GET http://127.0.0.1:8000/api/v1/genres/
+  Content-Type: application/json
+
+### * Добавление новой категории
+  POST http://127.0.0.1:8000/api/v1/genres/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+  {
+    "name":"Сериал",
+    "slug":"Serial"
+  }
+
+### * Удаление категории
+  DELETE http://127.0.0.1:8000/api/v1/genres/Serial/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+### * ------------------------------------------------------------------- Titles
+### * Получение списка всех произведений
+  GET http://127.0.0.1:8000/api/v1/titles/
+  Content-Type: application/json
+
+### * Добавление произведения
+  POST http://127.0.0.1:8000/api/v1/titles/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+  {
+    "name":"Картошка",
+    "year":2020,
+    "genre":[
+      "drama"
+    ],
+    "category":"movie"
+  }
+
+### * Получение информации о произведение
+  GET http://127.0.0.1:8000/api/v1/titles/1/
+  Content-Type: application/json
+  # Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+### * Частичное обновление информации о произведении
+  PATCH http://127.0.0.1:8000/api/v1/titles/1/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+  {
+    "name":"Картошка",
+    "year":2020,
+    "genre":[
+      "drama"
+    ],
+    "category":"movie"
+  }
+
+
+### * Удаление категории
+  DELETE http://127.0.0.1:8000/api/v1/genres/Serial/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+### * ------------------------------------------------------------------ Reviews
+### * Получение списка всех отзывов
+  GET http://127.0.0.1:8000/api/v1/titles/1/reviews/
+  Content-Type: application/json
+
+### * Добавление отзыва
+  POST http://127.0.0.1:8000/api/v1/titles/1/reviews/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+{
+"text": "This field is required.",
+  "score": 9
+}
+
+### * Получение отзыва по id
+  GET http://127.0.0.1:8000/api/v1/titles/1/reviews/76
+  Content-Type: application/json
+  # Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+### * Частичное обновление отзыва по id
+  PATCH http://127.0.0.1:8000/api/v1/titles/1/reviews/3
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+{
+  "name":"Картошка",
+  "year":2020,
+  "genre":[
+    "drama"
+  ],
+  "category":"movie"
+}
+
+
+### * Удаление отзыва по id
+  DELETE http://127.0.0.1:8000/api/v1/titles/1/reviews/3
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+
+### * ----------------------------------------------------------------- Comments
+### * Получение списка всех отзывов
+  GET http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/
+  Content-Type: application/json
+
+### * Добавление отзыва
+  POST http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+  {
+    "text":"Картошка"
+  }
+
+### * Получение отзыва по id
+  GET http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/4/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+### * Частичное обновление отзыва по id
+  PATCH http://127.0.0.1:8000/api/v1/titles/1/reviews/3
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{token_2}}
+
+{
+  "name":"Картошка",
+  "year":2020,
+  "genre":[
+    "drama"
+  ],
+  "category":"movie"
+}
+
+
+### * Удаление отзыва по id
+  DELETE http://127.0.0.1:8000/api/v1/titles/1/reviews/3
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+  # Authorization: Bearer {{access_2}}
+
+
+###
+  POST http://127.0.0.1:8000/api/v1/users/
+  Content-Type: application/json
+  Authorization: Bearer {{token_1}}
+{
+
+}
