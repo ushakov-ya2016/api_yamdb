@@ -1,7 +1,8 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
-from .validators import validate_score, validate_year
 from users.models import User
+
+from .validators import validate_year
 
 
 class Category(models.Model):
@@ -41,7 +42,13 @@ class Title(models.Model):
     Произведения, к которым пишут отзывы.
     """
     name = models.CharField(max_length=256)
-    year = models.IntegerField(validators=[validate_year])
+    year = models.IntegerField(
+        validators=[
+            MinValueValidator(1, 'Год должен быть от 1 до текущего'),
+            MaxValueValidator(2099, 'Год должен быть от 1 до текущего'),
+            validate_year,
+        ]
+    )
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category,
                                  null=True,
@@ -52,7 +59,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
-        ordering = ['name']
+        ordering = ['pk']
 
     def __str__(self):
         return self.name
@@ -84,10 +91,20 @@ class Review(models.Model):
     )
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.IntegerField(validators=[validate_score])
+    score = models.IntegerField(
+        verbose_name='Оценка произведения',
+        validators=[
+            MinValueValidator(1, 'Оценка должна быть от 1 до 10'),
+            MaxValueValidator(10, 'Оценка должна быть от 1 до 10'),
+        ]
+    )
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        ordering = ['pk']
+
         constraints = [
             models.UniqueConstraint(
                 fields=['title', 'author'],
@@ -107,3 +124,8 @@ class Comments(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['pk']

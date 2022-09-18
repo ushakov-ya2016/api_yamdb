@@ -38,69 +38,76 @@ class Command(BaseCommand):
                 return self.stdout.write(self.style.WARNING(ERROR_MESSAGE))
 
         for row in DictReader(open(FILE_PATH + MODELS[Category])):
-            td = Category(
-                id=row['id'],
-                name=row['name'],
-                slug=row['slug'],
-            )
-            td.save()
+            Category.objects.bulk_create([
+                Category(
+                    id=row['id'],
+                    name=row['name'],
+                    slug=row['slug'],
+                )
+            ])
 
         for row in DictReader(open(FILE_PATH + MODELS[Genre])):
-            genre = Genre(
-                id=row['id'],
-                name=row['name'],
-                slug=row['slug'],
-            )
-            genre.save()
+            Genre.objects.bulk_create([
+                Genre(
+                    id=row['id'],
+                    name=row['name'],
+                    slug=row['slug'],
+                )
+            ])
 
         for row in DictReader(open(FILE_PATH + MODELS[Title])):
-            titles = Title(
-                id=row['id'],
-                name=row['name'],
-                year=row['year'],
-                category_id=row['category'],
-            )
-            titles.save()
+            Title.objects.bulk_create([
+                Title(
+                    id=row['id'],
+                    name=row['name'],
+                    year=row['year'],
+                    category_id=row['category'],
+                )
+            ])
 
         for row in DictReader(open(FILE_PATH + MODELS[GenreTitle])):
-            genre_title = GenreTitle(
-                id=row['id'],
-                title_id=row['title_id'],
-                genre_id=row['genre_id'],
-            )
-            genre_title.save()
+            GenreTitle.objects.bulk_create([
+                GenreTitle(
+                    id=row['id'],
+                    title_id=row['title_id'],
+                    genre_id=row['genre_id'],
+                )
+            ])
 
         for row in DictReader(open(FILE_PATH + MODELS[User])):
-            user = User(
-                id=row['id'],
-                username=row['username'],
-                email=row['email'],
-                role=row['role'],
-                bio=row['bio'],
-                first_name=row['first_name'],
-                last_name=row['last_name'],
-            )
-            user.save()
+            User.objects.bulk_create([
+                User(
+                    id=row['id'],
+                    username=row['username'],
+                    email=row['email'],
+                    role=row['role'],
+                    bio=row['bio'],
+                    first_name=row['first_name'],
+                    last_name=row['last_name'],
+                )
+            ])
 
         for row in DictReader(open(FILE_PATH + MODELS[Review])):
-            review = Review(
-                id=row['id'],
-                title_id=row['title_id'],
-                text=row['text'],
-                author_id=row['author'],
-                score=row['score'],
-                pub_date=row['pub_date'],
-            )
-            review.save()
+            Review.objects.bulk_create([
+                Review(
+                    id=row['id'],
+                    title_id=row['title_id'],
+                    text=row['text'],
+                    author_id=row['author'],
+                    score=row['score'],
+                    pub_date=row['pub_date'],
+                )
+            ])
 
         for row in DictReader(open(FILE_PATH + MODELS[Comments])):
-            comment = Comments(
-                id=row['id'],
-                review_id=row['review_id'],
-                text=row['text'],
-                author_id=row['author'],
-                pub_date=row['pub_date'],
-            )
-            comment.save()
+            Comments.objects.bulk_create([
+                Comments(
+                    id=row['id'],
+                    review_id=row['review_id'],
+                    text=row['text'],
+                    author_id=row['author'],
+                    pub_date=row['pub_date'],
+                )
+            ])
 
         return self.stdout.write(self.style.SUCCESS(DONE_MESSAGE))
