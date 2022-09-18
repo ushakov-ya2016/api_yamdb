@@ -4,25 +4,18 @@ from django.db import models
 
 class User(AbstractUser):
 
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+
     USER_ROLES = (
-        ('user', 'user'),
-        ('moderator', 'moderator'),
-        ('admin', 'admin'),
+        (USER, 'Пользователь'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Администратор')
     )
-    bio = models.TextField(
-        max_length=300,
-        blank=True,
-    )
-    role = models.CharField(
-        max_length=20,
-        choices=USER_ROLES,
-        default='user',
-    )
-    username = models.CharField(
-        verbose_name='Имя пользователя',
-        max_length=150,
-        unique=True
-    )
+
+    bio = models.TextField(max_length=300, blank=True)
+    role = models.CharField(max_length=20, choices=USER_ROLES, default='user')
     email = models.EmailField(verbose_name='email', unique=True)
     confirmation_code = models.CharField(max_length=100, blank=True, null=True)
 
@@ -31,15 +24,15 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == 'admin'
+        return self.role == self.ADMIN
 
     @property
     def is_moderator(self):
-        return self.role == 'moderator'
+        return self.role == self.MODERATOR
 
     @property
     def is_user(self):
-        return self.role == 'self.user'
+        return self.role == self.USER
 
     class Meta:
         verbose_name = 'user'

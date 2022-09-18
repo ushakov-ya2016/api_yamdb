@@ -20,7 +20,7 @@ from users.permission import IsAdmin
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdmin, ]
     lookup_field = 'username'
     filter_backends = [filters.SearchFilter]
     search_fields = ['username']
@@ -31,17 +31,16 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.method == 'GET':
             serializer = UserSerializer(request.user)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-        else:
-            serializer = UserSerializer(
-                request.user,
-                data=request.data,
-                partial=True
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save(role=request.user.role)
-            return Response(
-                data=serializer.data, status=status.HTTP_200_OK
-            )
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save(role=request.user.role)
+        return Response(
+            data=serializer.data, status=status.HTTP_200_OK
+        )
 
 
 @api_view(['POST'])
@@ -53,7 +52,6 @@ def signup(request):
         email=serializer.validated_data['email'],
         username=serializer.validated_data['username'],
     )
-
     confirmation_code = default_token_generator.make_token(user)
     send_mail(
         'Your registration token',
