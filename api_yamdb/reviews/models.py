@@ -12,8 +12,8 @@ class Category(models.Model):
     slug = models.SlugField(unique=True, max_length=50)
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Категория произведения'
+        verbose_name_plural = 'Категории произведений'
         ordering = ['name']
 
     def __str__(self):
@@ -28,8 +28,8 @@ class Genre(models.Model):
     slug = models.SlugField(unique=True, max_length=50)
 
     class Meta:
-        verbose_name = 'Жанр'
-        verbose_name_plural = 'Жанры'
+        verbose_name = 'Жанр произведения'
+        verbose_name_plural = 'Жанры произведений'
         ordering = ['name']
 
     def __str__(self):
@@ -66,8 +66,8 @@ class GenreTitle(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'Произведение, жанр'
-        verbose_name_plural = 'Произведения, жанры'
+        verbose_name = 'Связь произведения и жанра'
+        verbose_name_plural = 'Связь произведений и жанров'
         ordering = ['title']
 
     def __str__(self):
