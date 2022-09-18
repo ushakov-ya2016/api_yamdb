@@ -21,8 +21,9 @@ DONE_MESSAGE = """
 """
 ERROR_MESSAGE = """
  - Cначала нужно удалить файл "db.sqlite3" (уничтожить текущую БД)
- - Выполнить команду "python3 manage.py migrate" (создание новых таблиц)
- - Выполнить команду "python3 manage.py importdata" (загрузка тестовых данных)
+ - Выполнить команду "python manage.py makemigrations" (создание зависимостей)
+ - Выполнить команду "python manage.py migrate" (создание новых таблиц)
+ - Выполнить команду "python manage.py import_csv" (загрузка тестовых данных)
  """
 
 
