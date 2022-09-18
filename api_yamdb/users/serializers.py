@@ -4,6 +4,7 @@ from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         fields = (
             'first_name', 'last_name', 'username', 'bio', 'email', 'role',
@@ -11,25 +12,18 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
 
 
-class ConfirmationCodeSerializer(serializers.Serializer):
-    username = serializers.RegexField(
-        max_length=150,
-        required=True,
-        regex=r'^[\w.@+-]'
-    )
-    confirmation_code = serializers.CharField(required=True)
+class ConfirmationCodeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ('username', 'confirmation_code')
+        model = User
 
 
-class SignupSerializer(serializers.Serializer):
-    email = serializers.EmailField(
-        max_length=254,
-        required=True,
-    )
-    username = serializers.RegexField(
-        max_length=150,
-        required=True,
-        regex=r'^[\w.@+-]',
-    )
+class SignupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ('username', 'email')
+        model = User
 
     def validate(self, data):
         if data.get('username') == 'me':

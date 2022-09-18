@@ -52,7 +52,6 @@ def signup(request):
         email=serializer.validated_data['email'],
         username=serializer.validated_data['username'],
     )
-
     confirmation_code = default_token_generator.make_token(user)
     send_mail(
         'Your registration token',
