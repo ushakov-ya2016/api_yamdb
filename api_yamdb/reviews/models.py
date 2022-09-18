@@ -2,7 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from users.models import User
 
-from .validators import validate_year
+from reviews.validators import validate_year
 
 
 class Category(models.Model):
@@ -23,7 +23,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     """
-    Категории жанров.
+    Жанры произведений.
     """
     name = models.CharField(max_length=256)
     slug = models.SlugField(unique=True, max_length=50)
@@ -45,7 +45,6 @@ class Title(models.Model):
     year = models.IntegerField(
         validators=[
             MinValueValidator(1, 'Год должен быть от 1 до текущего'),
-            MaxValueValidator(2099, 'Год должен быть от 1 до текущего'),
             validate_year,
         ]
     )
@@ -94,8 +93,8 @@ class Review(models.Model):
     score = models.IntegerField(
         verbose_name='Оценка произведения',
         validators=[
-            MinValueValidator(1, 'Оценка должна быть от 1 до 10'),
-            MaxValueValidator(10, 'Оценка должна быть от 1 до 10'),
+            MinValueValidator(1, 'Оценка должна быть целым числом от 1 до 10'),
+            MaxValueValidator(10, 'Оценка должна быть целым числом от 1 до 10')
         ]
     )
     pub_date = models.DateTimeField(auto_now_add=True)
