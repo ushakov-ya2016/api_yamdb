@@ -21,8 +21,9 @@ DONE_MESSAGE = """
 """
 ERROR_MESSAGE = """
  - Cначала нужно удалить файл "db.sqlite3" (уничтожить текущую БД)
- - Выполнить команду "python3 manage.py migrate" (создание новых таблиц)
- - Выполнить команду "python3 manage.py importdata" (загрузка тестовых данных)
+ - Выполнить команду "python manage.py makemigrations" (создание зависимостей)
+ - Выполнить команду "python manage.py migrate" (создание новых таблиц)
+ - Выполнить команду "python manage.py import_csv" (загрузка тестовых данных)
  """
 
 
@@ -37,7 +38,7 @@ class Command(BaseCommand):
             if model.objects.exists():
                 return self.stdout.write(self.style.WARNING(ERROR_MESSAGE))
 
-        for row in DictReader(open(FILE_PATH + MODELS[Category])):
+        for row in DictReader(open(FILE_PATH + MODELS[Category], encoding='utf-8')):
             Category.objects.bulk_create([
                 Category(
                     id=row['id'],
@@ -46,7 +47,7 @@ class Command(BaseCommand):
                 )
             ])
 
-        for row in DictReader(open(FILE_PATH + MODELS[Genre])):
+        for row in DictReader(open(FILE_PATH + MODELS[Genre], encoding='utf-8')):
             Genre.objects.bulk_create([
                 Genre(
                     id=row['id'],
@@ -55,7 +56,7 @@ class Command(BaseCommand):
                 )
             ])
 
-        for row in DictReader(open(FILE_PATH + MODELS[Title])):
+        for row in DictReader(open(FILE_PATH + MODELS[Title], encoding='utf-8')):
             Title.objects.bulk_create([
                 Title(
                     id=row['id'],
@@ -65,7 +66,7 @@ class Command(BaseCommand):
                 )
             ])
 
-        for row in DictReader(open(FILE_PATH + MODELS[GenreTitle])):
+        for row in DictReader(open(FILE_PATH + MODELS[GenreTitle], encoding='utf-8')):
             GenreTitle.objects.bulk_create([
                 GenreTitle(
                     id=row['id'],
@@ -74,7 +75,7 @@ class Command(BaseCommand):
                 )
             ])
 
-        for row in DictReader(open(FILE_PATH + MODELS[User])):
+        for row in DictReader(open(FILE_PATH + MODELS[User], encoding='utf-8')):
             User.objects.bulk_create([
                 User(
                     id=row['id'],
@@ -87,7 +88,7 @@ class Command(BaseCommand):
                 )
             ])
 
-        for row in DictReader(open(FILE_PATH + MODELS[Review])):
+        for row in DictReader(open(FILE_PATH + MODELS[Review], encoding='utf-8')):
             Review.objects.bulk_create([
                 Review(
                     id=row['id'],
@@ -99,7 +100,7 @@ class Command(BaseCommand):
                 )
             ])
 
-        for row in DictReader(open(FILE_PATH + MODELS[Comments])):
+        for row in DictReader(open(FILE_PATH + MODELS[Comments], encoding='utf-8')):
             Comments.objects.bulk_create([
                 Comments(
                     id=row['id'],
